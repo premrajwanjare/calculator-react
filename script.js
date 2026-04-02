@@ -1,58 +1,36 @@
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #1e1e2f;
-  font-family: Arial;
+const display = document.getElementById("display");
+
+function appendValue(value) {
+  display.value += value;
 }
 
-.calculator {
-  background: #2c2c3e;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+function clearDisplay() {
+  display.value = "";
 }
 
-#display {
-  width: 100%;
-  height: 60px;
-  margin-bottom: 15px;
-  text-align: right;
-  font-size: 24px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #111;
-  color: #fff;
+function deleteLast() {
+  display.value = display.value.slice(0, -1);
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(4, 70px);
-  gap: 10px;
+function calculate() {
+  try {
+    display.value = eval(display.value);
+  } catch {
+    display.value = "Error";
+  }
 }
 
-button {
-  height: 60px;
-  font-size: 18px;
-  border: none;
-  border-radius: 10px;
-  background: #444;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
-}
+// ✅ Keyboard Support
+document.addEventListener("keydown", function (event) {
+  const key = event.key;
 
-button:hover {
-  background: #666;
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-.equal {
-  grid-column: span 2;
-  background: orange;
-}
+  if (!isNaN(key) || ["+", "-", "*", "/", "."].includes(key)) {
+    appendValue(key);
+  } else if (key === "Enter") {
+    calculate();
+  } else if (key === "Backspace") {
+    deleteLast();
+  } else if (key === "Escape") {
+    clearDisplay();
+  }
+});
